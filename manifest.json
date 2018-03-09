@@ -2,6 +2,11 @@
   "manifest_version": 2,
   "name": "Hello Chrome",
   "version": "0.1",
+  "permissions": [
+      "background",
+      "identity",
+      "*://*.google.com/*"
+  ],
   "content_scripts": [
       {
         "matches": [
@@ -14,6 +19,13 @@
       "default_icon": "icon.png"
   },
   "background":{
-      "scripts": ["background.js"]
+      "scripts": ["base64.js", "background.js"]
+  },
+  "content_security_policy": "script-src https://*.google.com 'unsafe-eval'; object-src 'self'",
+  "oauth2": {
+    "client_id": "692519634641-0q028cvd90d6s9teen0lg22l6treiqcu.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.modify"
+    ]
   }
 }

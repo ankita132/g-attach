@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gmail API Quickstart</title>
+    <meta charset='utf-8' />
+</head>
+<body>
+<p>Gmail API Quickstart</p>
+<a id="download-attach" download="filename">Attach</a>
+<!--Add buttons to initiate auth sequence and sign out-->
+<button id="authorize-button" style="display: none;">Authorize</button>
+<button id="signout-button" style="display: none;">Sign Out</button>
+
+<pre id="content"></pre>
+
+<script type="text/javascript">
+    // Client ID and API key from the Developer Console
+    var CLIENT_ID = '692519634641-7g8lbollqn2vqs43d8dqd8or4qnlb2n0.apps.googleusercontent.com';
+    var API_KEY = 'AIzaSyAdTyRvOv_jIL1Zc2Ya2B0rqrVzOleOupo';
+
+    // Array of API discovery doc URLs for APIs used by the quickstart
+    var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest"];
+
+    // Authorization scopes required by the API; multiple scopes can be
+    // included, separated by spaces.
+    var SCOPES = 'https://www.googleapis.com/auth/gmail.readonly';
+
+    var authorizeButton = document.getElementById('authorize-button');
+    var signoutButton = document.getElementById('signout-button');
+
+    /**
+     *  On load, called to load the auth2 library and API client library.
+     */
+    function handleClientLoad() {
+        gapi.load('client:auth2', initClient);
+    }
+
+    /**
+     *  Initializes the API client library and sets up sign-in state
+     *  listeners.
+     */
+    function initClient() {
+        gapi.client.init({
+            apiKey: API_KEY,
+            clientId: CLIENT_ID,
+            discoveryDocs: DISCOVERY_DOCS,
+            scope: SCOPES
+        }).then(function () {
+            // Listen for sign-in state changes.
+            gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+
+            // Handle the initial sign-in state.
+            updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+            authorizeButton.onclick = handleAuthClick;
+            signoutButton.onclick = handleSignoutClick;
+        });
+    }
+
+    /**
+     *  Called when the signed in status changes, to update the UI
+     *  appropriately. After a sign-in, the API is called.
+     */
+    function updateSigninStatus(isSignedIn) {
+        if (isSignedIn) {
+            authorizeButton.style.display = 'none';
+            signoutButton.style.display = 'block';
+            listMessage('me', 20, listHandler)
+        } else {
+            authorizeButton.style.display = 'block';
+            signoutButton.style.display = 'none';
+        }
+    }
+
+    function listHandler(list)
+    {
+        console.log(list);
+        var messages = list.messages;
+
+        for(var i = 0; i < messages.length; i++)
+        {
+            getMessage('me', messages[i].id, getAttachmentsHandler);
+        }
+    }
+
+    function getAttachments(userId, message, callback) {
+        if(!message.payload.parts)
+            return;
+        var parts = message.payload.parts;
+        for (var i = 0; i < parts.length; i++) {
+            var part = parts[i];
+            if (part.filename && part.filename.length > 0) {
+                var attachId = part.body.attachmentId;
+                var request = gapi.client.gmail.users.messages.attachments.get({
+                    'id': attachId,
+                    'messageId': message.id,
+                    'userId': userId
+                });
+                request.execute(function(attachment) {
+                    callback(part.filename, part.mimeType, attachment);
+                });
+            }
+        }
+    }
+
+
+    function b64toBlob (b64Data, contentType, sliceSize) {
+        contentType = contentType || '';
+        sliceSize = sliceSize || 512;
+
+        var byteCharacters = atob(b64Data);
+        var byteArrays = [];
+
+        for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+            var byteNumbers = new Array(slice.length);
+            for (var i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i)
+            }
+
+            var byteArray = new Uint8Array(byteNumbers);
+
+            byteArrays.push(byteArray)
+        }
+
+        var blob = new Blob(byteArrays, {type: contentType});
+        let urlBlob = URL.createObjectURL(blob);
+        return urlBlob;
+    }
+
+    function getAttachmentsHandler(message) {
+        //console.log(message);
+        getAttachments('me', message, viewAttachment);
+
+        getAttachments('me', message, function (filename, mimeType, attachment) {
+
+            let dataBase64Rep = attachment.data.replace(/-/g, '+').replace(/_/g, '/');
+
+            let urlBlob = b64toBlob(dataBase64Rep, mimeType, attachment.size);
+
+            let dlnk = document.getElementById('download-attach');
+            dlnk.href = urlBlob;
+            dlnk.download = filename;
+            //dlnk.click();
+            URL.revokeObjectURL(urlBlob);
+        });
+    }
+
+    function viewAttachment(filename, mimeType, attachment)
+    {
+        console.log(filename);
+        console.log(mimeType);
+        console.log(attachment);
+    }
+
+    function getMessage(userId, messageId, callback) {
+        var request = gapi.client.gmail.users.messages.get({
+            'userId': userId,
+            'id': messageId
+        });
+        request.execute(callback);
+    }
+
+    /**
+     *  Sign in the user upon button click.
+     */
+    function handleAuthClick(event) {
+        gapi.auth2.getAuthInstance().signIn();
+    }
+
+    /**
+     *  Sign out the user upon button click.
+     */
+    function handleSignoutClick(event) {
+        gapi.auth2.getAuthInstance().signOut();
+    }
+
+
+    function listMessage(userId, maxResults, callback)
+    {
+        var request = gapi.client.gmail.users.messages.list({
+            'userId': userId,
+            'maxResults': maxResults
+        });
+        request.execute(function(resp){
+            callback(resp);
+        })
+    }
+
+    function listMessages(userId, query, callback) {
+        var getPageOfMessages = function(request, result) {
+            request.execute(function(resp) {
+                result = result.concat(resp.messages);
+                var nextPageToken = resp.nextPageToken;
+                if (nextPageToken) {
+                    request = gapi.client.gmail.users.messages.list({
+                        'userId': userId,
+                        'pageToken': nextPageToken,
+                        'q': query
+                    });
+                    getPageOfMessages(request, result);
+                } else {
+                    callback(result);
+                }
+            });
+        };
+        var initialRequest = gapi.client.gmail.users.messages.list({
+            'userId': userId,
+            'q': query
+        });
+        getPageOfMessages(initialRequest, []);
+    }
+
+
+
+</script>
+
+<script async defer src="https://apis.google.com/js/api.js"
+        onload="this.onload=function(){};handleClientLoad()"
+        onreadystatechange="if (this.readyState === 'complete') this.onload()">
+</script>
+</body>
+</html>

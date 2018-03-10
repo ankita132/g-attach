@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c520fa98-e34a-41b1-9b36-35bd36c627b3" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/quickstart.html" afterPath="$PROJECT_DIR$/quickstart.html" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -20,11 +19,12 @@
       <file leaf-file-name="quickstart.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/quickstart.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="462">
-              <caret line="144" column="44" lean-forward="false" selection-start-line="144" selection-start-column="44" selection-end-line="144" selection-end-column="44" />
+            <state relative-caret-position="484">
+              <caret line="104" column="47" lean-forward="false" selection-start-line="104" selection-start-column="47" selection-end-line="104" selection-end-column="47" />
               <folding>
                 <element signature="n#style#0;n#button#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#button#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="e#7025#7553#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -126,18 +126,18 @@
       <workItem from="1520593635630" duration="1489000" />
       <workItem from="1520597516442" duration="72000" />
       <workItem from="1520598552106" duration="2591000" />
-      <workItem from="1520609178025" duration="17746000" />
+      <workItem from="1520609178025" duration="19853000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="27835000" />
+    <option name="totallyTimeSpent" value="29942000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="960" y="24" width="960" height="977" extended-state="4" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14375" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14375" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -184,7 +184,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/quickstart.html</url>
-          <line>182</line>
+          <line>192</line>
           <properties />
           <option name="timeStamp" value="2" />
         </line-breakpoint>
@@ -235,11 +235,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/quickstart.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="462">
-          <caret line="144" column="44" lean-forward="false" selection-start-line="144" selection-start-column="44" selection-end-line="144" selection-end-column="44" />
+        <state relative-caret-position="484">
+          <caret line="104" column="47" lean-forward="false" selection-start-line="104" selection-start-column="47" selection-end-line="104" selection-end-column="47" />
           <folding>
             <element signature="n#style#0;n#button#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#button#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="e#7025#7553#0" expanded="false" />
           </folding>
         </state>
       </provider>

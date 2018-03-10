@@ -8,6 +8,14 @@
 <body>
     <p>Gmail API Quickstart</p>
     <ul class="container"></ul>
+    <h3>Images</h3>
+    <div class="image-container"></div>
+    <h3>Office</h3>
+    <div class="office-container"></div>
+    <h3>PDFs</h3>
+    <div class="pdf-container"></div>
+    <h3>Other media</h3>
+    <div class="other-container"></div>
     <!--<a id="download-attach" download="filename">Attach</a>-->
     <!--Add buttons to initiate auth sequence and sign out-->
     <button id="authorize-button" style="display: none;">Authorize</button>
@@ -108,27 +116,41 @@
                 byteArrays.push(byteArray)
             }
             var blob = new Blob(byteArrays, {type: contentType});
-            let urlBlob = URL.createObjectURL(blob);
-            return urlBlob;
+            return URL.createObjectURL(blob);
         }
         var c = 0;
+        var imageext = ['jpg', 'jpeg', 'png', 'gif', 'tiff', 'bmp', 'svg', 'raw'];
+        var officeext = ['doc', 'dot', 'wbk', 'docm', 'dotx', 'dotm', 'docb', 'docx', 'xls', 'xlt', 'xlm', 'xlsx', 'xlsm', 'xltx', 'xltm', 'xlsb', 'xla', 'xlam', 'xll', 'xlw', 'ppt', 'pot', 'pps', 'pptx', 'pptm', 'potx', 'potm', 'ppam', 'ppsx', 'ppsm', 'sldx', 'sldm', 'odt', 'ott', 'xml', 'wpd', 'rtf', 'txt', 'csv', 'ods', 'ots', 'odp', 'odg', 'otp'];
+
         function getAttachmentsHandler(message) {
             if((message.labelIds.indexOf("CATEGORY_SOCIAL") > -1) || (message.labelIds.indexOf("CATEGORY_PROMOTIONS") > -1) || (message.labelIds.indexOf("INBOX") == -1))
                 return;
             console.log(message);
-            getAttachments('me', message, viewAttachment);
+            //getAttachments('me', message, viewAttachment);
             getAttachments('me', message, function (filename, mimeType, attachment) {
-              $('.container').append('<li><a id="download-attach'+c+'" download="filename">'+filename+'</a></li>');
+                var link = 'data:' + mimeType + ';base64,' + attachment.data.replace(/-/g, '+').replace(/_/g, '/');
+                link = '<li><a href="' + link + '" download="' + filename + '">' + filename + '</a></li>'
+                $('.container').append(link);
+                var ext = filename.split('.').pop().toLowerCase();
+                if(imageext.indexOf(ext) > -1)
+                    $('.image-container').append(link);
+                else if(officeext.indexOf(ext) > -1)
+                    $('.office-container').append(link);
+                else if(ext == 'pdf')
+                    $('.pdf-container').append(link);
+                else
+                    $('.other-container').append(link);
+                /*$('.container').append('<li><a id="download-attach'+c+'" download="filename">'+filename+'</a></li>');
 
-                let dataBase64Rep = attachment.data.replace(/-/g, '+').replace(/_/g, '/');
-                let urlBlob = b64toBlob(dataBase64Rep, mimeType, attachment.size);
-                let dlnk = document.getElementById('download-attach'+ c);
+                var dataBase64Rep = attachment.data.replace(/-/g, '+').replace(/_/g, '/');
+                var urlBlob = b64toBlob(dataBase64Rep, mimeType, attachment.size);
+                var dlnk = document.getElementById('download-attach'+ c);
                 dlnk.href = urlBlob;
                 dlnk.download = filename;
                 //dlnk.click();
                 URL.revokeObjectURL(urlBlob);
                 c++;
-                console.log(c);
+                console.log(c);*/
             });
         }
         function viewAttachment(filename, mimeType, attachment)
@@ -160,7 +182,7 @@
                 callback(resp);
             })
         }
-        function listMessages(userId, query, callback) {
+        /*function listMessages(userId, query, callback) {
             var getPageOfMessages = function(request, result) {
                 request.execute(function(resp) {
                     result = result.concat(resp.messages);
@@ -182,7 +204,7 @@
                 'q': query
             });
             getPageOfMessages(initialRequest, []);
-        }
+        }*/
     </script>
 
 <script async defer src="https://apis.google.com/js/api.js"

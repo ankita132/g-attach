@@ -6,13 +6,14 @@
 </head>
 <body>
 <p>Gmail API Quickstart</p>
-<a id="download-attach" download="filename">Attach</a>
+<ul class="container"></ul>
+<!--<a id="download-attach" download="filename">Attach</a>-->
 <!--Add buttons to initiate auth sequence and sign out-->
 <button id="authorize-button" style="display: none;">Authorize</button>
 <button id="signout-button" style="display: none;">Sign Out</button>
 
 <pre id="content"></pre>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script type="text/javascript">
     // Client ID and API key from the Developer Console
     var CLIENT_ID = '692519634641-7g8lbollqn2vqs43d8dqd8or4qnlb2n0.apps.googleusercontent.com';
@@ -64,7 +65,7 @@
         if (isSignedIn) {
             authorizeButton.style.display = 'none';
             signoutButton.style.display = 'block';
-            listMessage('me', 20, listHandler)
+            listMessage('me', 60, listHandler)
         } else {
             authorizeButton.style.display = 'block';
             signoutButton.style.display = 'none';
@@ -81,7 +82,7 @@
             getMessage('me', messages[i].id, getAttachmentsHandler);
         }
     }
-
+    var c = 0;
     function getAttachments(userId, message, callback) {
         if(!message.payload.parts)
             return;
@@ -95,13 +96,15 @@
                     'messageId': message.id,
                     'userId': userId
                 });
+
+
                 request.execute(function(attachment) {
                     callback(part.filename, part.mimeType, attachment);
                 });
+
             }
         }
     }
-
 
     function b64toBlob (b64Data, contentType, sliceSize) {
         contentType = contentType || '';
@@ -134,15 +137,18 @@
 
         getAttachments('me', message, function (filename, mimeType, attachment) {
 
+   $('.container').append('<li><a id="download-attach'+c+'" download="filename">'+filename+'</a></li>');
             let dataBase64Rep = attachment.data.replace(/-/g, '+').replace(/_/g, '/');
 
             let urlBlob = b64toBlob(dataBase64Rep, mimeType, attachment.size);
 
-            let dlnk = document.getElementById('download-attach');
+            let dlnk = document.getElementById('download-attach' + c);
             dlnk.href = urlBlob;
             dlnk.download = filename;
             //dlnk.click();
             URL.revokeObjectURL(urlBlob);
+            c++;
+            console.log(c);
         });
     }
 

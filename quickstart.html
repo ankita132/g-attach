@@ -24,7 +24,9 @@
     <button id="signout-button" style="display: none;">Sign Out</button>
 
     <pre id="content"></pre>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://js.live.net/v7.2/OneDrive.js"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
     <script type="text/javascript">
         // Client ID and API key from the Developer Console
         var CLIENT_ID = '692519634641-7g8lbollqn2vqs43d8dqd8or4qnlb2n0.apps.googleusercontent.com';
@@ -146,22 +148,10 @@
         }
 
         function showAttachments(filename, mimeType, attachment) {
-            /*var link = 'data:' + mimeType + ';base64,' + attachment.data.replace(/-/g, '+').replace(/_/g, '/');
-            link = '<li><a href="' + link + '" download="' + filename + '">' + filename + '</a></li>'
-            $('.container').append(link);
-            var ext = filename.split('.').pop().toLowerCase();
-            if(imageext.indexOf(ext) > -1)
-                $('.image-container').append(link);
-            else if(officeext.indexOf(ext) > -1)
-                $('.office-container').append(link);
-            else if(ext == 'pdf')
-                $('.pdf-container').append(link);
-            else
-                $('.other-container').append(link);*/
             var dataBase64Rep = attachment.data.replace(/-/g, '+').replace(/_/g, '/');
             var blob = b64toBlob(dataBase64Rep, mimeType, attachment.size);
             var blobUrl = URL.createObjectURL(blob);
-            var link = '<li><a href="' + blobUrl + '"  id="download-attach' + c + '" download="' + filename + '">'+filename+'</a></li>';
+            var link = '<li><a href="' + blobUrl + '"  id="download-attach' + c + '" download="' + filename + '">'+filename+'</a></li><button class="od-' + c + '">Save to OneDrive</button><div class="g-savetodrive" data-src="' + blobUrl + ' "data-filename="' + filename + '" data-sitename="gattach"></div>';
             $('.container').append(link);
             var ext = filename.split('.').pop().toLowerCase();
             if(imageext.indexOf(ext) > -1)
@@ -172,8 +162,30 @@
                 $('.pdf-container').append(link);
             else
                 $('.other-container').append(link);
+
+            $('.od-' + c).on('click', function () {
+                console.log("clicked");
+                var odOptions = {
+                    clientId: "9b939ddf-4334-4ade-a654-865807e80ca6",
+                    action: "save",
+                    sourceInputElementId: "fileUploadControl-" + c ,
+                    sourceUri: dataBase64Rep,
+                    fileName: filename,
+                    openInNewWindow: true,
+                    advanced: {},
+                    success: function(files) { console.log("Uploaded") },
+                    progress: function(p) {console.log("Progress")},
+                    cancel: function() { console.log("Cancelled")},
+                    error: function(e) { console.log("Error") }
+                }
+                launchSaveToOneDrive(odOptions);
+            });
             c++;
             console.log(c);
+        }
+
+        function launchSaveToOneDrive(odOptions){
+            OneDrive.save(odOptions);
         }
 
         function getMessage(userId, messageId, callback) {
@@ -226,7 +238,7 @@
    var valThis = $(this).val().toLowerCase();
     $('.container>li').each(function(){
      var text = $(this).text().toLowerCase();
-        (text.indexOf(valThis) == 0) ? $(this).show() : $(this).hide();
+        (text.indexOf(valThis) > -1) ? $(this).show() : $(this).hide();
         $('.image-container').hide();
         $('.office-container').hide();
         $('.pdf-container').hide();
@@ -244,9 +256,9 @@
 });
     </script>
 
-<script async defer src="https://apis.google.com/js/api.js"
+    <script async defer src="https://apis.google.com/js/api.js"
         onload="this.onload=function(){};handleClientLoad()"
         onreadystatechange="if (this.readyState === 'complete') this.onload()">
-</script>
-</body>
+    </script>
+    </body>
 </html>

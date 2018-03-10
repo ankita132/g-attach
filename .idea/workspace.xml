@@ -19,12 +19,11 @@
       <file leaf-file-name="quickstart.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/quickstart.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="484">
-              <caret line="104" column="47" lean-forward="false" selection-start-line="104" selection-start-column="47" selection-end-line="104" selection-end-column="47" />
+            <state relative-caret-position="594">
+              <caret line="171" column="51" lean-forward="true" selection-start-line="171" selection-start-column="51" selection-end-line="171" selection-end-column="51" />
               <folding>
                 <element signature="n#style#0;n#button#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#button#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="e#7025#7553#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -126,12 +125,12 @@
       <workItem from="1520593635630" duration="1489000" />
       <workItem from="1520597516442" duration="72000" />
       <workItem from="1520598552106" duration="2591000" />
-      <workItem from="1520609178025" duration="19853000" />
+      <workItem from="1520609178025" duration="21409000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="29942000" />
+    <option name="totallyTimeSpent" value="31498000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="960" y="24" width="960" height="977" extended-state="4" />
@@ -184,7 +183,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/quickstart.html</url>
-          <line>192</line>
+          <line>197</line>
           <properties />
           <option name="timeStamp" value="2" />
         </line-breakpoint>
@@ -235,12 +234,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/quickstart.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="484">
-          <caret line="104" column="47" lean-forward="false" selection-start-line="104" selection-start-column="47" selection-end-line="104" selection-end-column="47" />
+        <state relative-caret-position="594">
+          <caret line="171" column="51" lean-forward="true" selection-start-line="171" selection-start-column="51" selection-end-line="171" selection-end-column="51" />
           <folding>
             <element signature="n#style#0;n#button#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#button#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="e#7025#7553#0" expanded="false" />
           </folding>
         </state>
       </provider>

@@ -9,13 +9,13 @@
     <p>Gmail API Quickstart</p>
     <ul class="container"></ul>
     <h3>Images</h3>
-    <div class="image-container"></div>
+    <ul class="image-container"></ul>
     <h3>Office</h3>
-    <div class="office-container"></div>
+    <ul class="office-container"></ul>
     <h3>PDFs</h3>
-    <div class="pdf-container"></div>
+    <ul class="pdf-container"></ul>
     <h3>Other media</h3>
-    <div class="other-container"></div>
+    <ul class="other-container"></ul>
     <!--<a id="download-attach" download="filename">Attach</a>-->
     <!--Add buttons to initiate auth sequence and sign out-->
     <button id="authorize-button" style="display: none;">Authorize</button>
@@ -108,23 +108,29 @@
                 }
             }
         }
-        function b64toBlob (b64Data, contentType, sliceSize) {
+        function b64toBlob(b64Data, contentType, sliceSize) {
             contentType = contentType || '';
             sliceSize = sliceSize || 512;
+
             var byteCharacters = atob(b64Data);
             var byteArrays = [];
+
             for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
                 var slice = byteCharacters.slice(offset, offset + sliceSize);
+
                 var byteNumbers = new Array(slice.length);
                 for (var i = 0; i < slice.length; i++) {
-                    byteNumbers[i] = slice.charCodeAt(i)
+                    byteNumbers[i] = slice.charCodeAt(i);
                 }
+
                 var byteArray = new Uint8Array(byteNumbers);
-                byteArrays.push(byteArray)
+
+                byteArrays.push(byteArray);
             }
-            var blob = new Blob(byteArrays, {type: contentType});
-            return URL.createObjectURL(blob);
+
+            return new Blob(byteArrays, {type: contentType});
         }
+
         var c = 0;
         var imageext = ['jpg', 'jpeg', 'png', 'gif', 'tiff', 'bmp', 'svg', 'raw'];
         var officeext = ['doc', 'dot', 'wbk', 'docm', 'dotx', 'dotm', 'docb', 'docx', 'xls', 'xlt', 'xlm', 'xlsx', 'xlsm', 'xltx', 'xltm', 'xlsb', 'xla', 'xlam', 'xll', 'xlw', 'ppt', 'pot', 'pps', 'pptx', 'pptm', 'potx', 'potm', 'ppam', 'ppsx', 'ppsm', 'sldx', 'sldm', 'odt', 'ott', 'xml', 'wpd', 'rtf', 'txt', 'csv', 'ods', 'ots', 'odp', 'odg', 'otp'];
@@ -138,7 +144,7 @@
         }
 
         function showAttachments(filename, mimeType, attachment) {
-            var link = 'data:' + mimeType + ';base64,' + attachment.data.replace(/-/g, '+').replace(/_/g, '/');
+            /*var link = 'data:' + mimeType + ';base64,' + attachment.data.replace(/-/g, '+').replace(/_/g, '/');
             link = '<li><a href="' + link + '" download="' + filename + '">' + filename + '</a></li>'
             $('.container').append(link);
             var ext = filename.split('.').pop().toLowerCase();
@@ -149,26 +155,25 @@
             else if(ext == 'pdf')
                 $('.pdf-container').append(link);
             else
-                $('.other-container').append(link);
-            /*$('.container').append('<li><a id="download-attach'+c+'" download="filename">'+filename+'</a></li>');
-
+                $('.other-container').append(link);*/
             var dataBase64Rep = attachment.data.replace(/-/g, '+').replace(/_/g, '/');
-            var urlBlob = b64toBlob(dataBase64Rep, mimeType, attachment.size);
-            var dlnk = document.getElementById('download-attach'+ c);
-            dlnk.href = urlBlob;
-            dlnk.download = filename;
-            //dlnk.click();
-            URL.revokeObjectURL(urlBlob);
+            var blob = b64toBlob(dataBase64Rep, mimeType, attachment.size);
+            var blobUrl = URL.createObjectURL(blob);
+            var link = '<li><a href="' + blobUrl + '"  id="download-attach' + c + '" download="' + filename + '">'+filename+'</a></li>';
+            $('.container').append(link);
+            var ext = filename.split('.').pop().toLowerCase();
+            if(imageext.indexOf(ext) > -1)
+                $('.image-container').append(link);
+            else if(officeext.indexOf(ext) > -1)
+                $('.office-container').append(link);
+            else if(ext == 'pdf')
+                $('.pdf-container').append(link);
+            else
+                $('.other-container').append(link);
             c++;
-            console.log(c);*/
+            console.log(c);
         }
 
-        function viewAttachment(filename, mimeType, attachment)
-        {
-            console.log(filename);
-            console.log(mimeType);
-            console.log(attachment);
-        }
         function getMessage(userId, messageId, callback) {
             var request = gapi.client.gmail.users.messages.get({
                 'userId': userId,

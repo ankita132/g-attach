@@ -41,8 +41,7 @@
         var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest"];
         // Authorization scopes required by the API; multiple scopes can be
         // included, separated by spaces.
-        var SCOPES = 'https://www.googleapis.com/auth/gmail.readonly';
-        var authorizeButton = document.getElementById('authorize-button');
+        var SCOPES = 'https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/drive';        var authorizeButton = document.getElementById('authorize-button');
         var signoutButton = document.getElementById('signout-button');
         /**
          *  On load, called to load the auth2 library and API client library.
@@ -162,40 +161,88 @@
             var dataBase64Rep = attachment.data.replace(/-/g, '+').replace(/_/g, '/');
             var blob = b64toBlob(dataBase64Rep, mimeType, attachment.size);
             var blobUrl = URL.createObjectURL(blob);
-            var link = '<li><a href="' + blobUrl + '"  id="download-attach' + c + '" download="' + filename + '">'+filename+'</a><button class="save od-' + c + '"><img src="google_drive.ico" width="30" height="30"/></button><div class="g-savetodrive" data-src="' + blobUrl + ' "data-filename="' + filename + '" data-sitename="gattach"></div></li>';
+            //var link = '<li><a href="' + blobUrl + '"  id="download-attach' + c + '" download="' + filename + '">'+filename+'</a><button class="save od-' + c + '"><img src="google_drive.ico" width="30" height="30"/></button><div class="g-savetodrive" data-src="' + blobUrl + ' "data-filename="' + filename + '" data-sitename="gattach"></div></li>';
+
+            var link = '<li><a href="' + blobUrl + '"  id="download-attach' + c + '" download="' + filename + '">'+filename+'</a><button class="save od-' + c + '"><img src="google_drive.ico" width="30" height="30"/></button></div></li>';
             $('.container').append(link);
             var ext = filename.split('.').pop().toLowerCase();
-            if(imageext.indexOf(ext) > -1){
+            var type="";
+            if(imageext.indexOf(ext) > -1) {
                 $('.image-container').append(link);
-              }
-            else if(officeext.indexOf(ext) > -1){
+                type = 'image/' + ext;
+            }
+            else if(officeext.indexOf(ext) > -1) {
                 $('.office-container').append(link);
-              }
-            else if(ext == 'pdf'){
+                type = mimeType;
+            }
+            else if(ext == 'pdf') {
                 $('.pdf-container').append(link);
-              }
-            else{
+                type = "application/pdf"
+            }
+            else {
                 $('.other-container').append(link);
-              }
+            }
+            console.log(type);
             $('.od-' + c).on('click', function () {
-                console.log("clicked");
+                insertFile(filename, mimeType, dataBase64Rep, '')
+                /*console.log("clicked");
                 var odOptions = {
                     clientId: "9b939ddf-4334-4ade-a654-865807e80ca6",
                     action: "save",
-                    sourceInputElementId: "fileUploadControl-" + c ,
-                    sourceUri: dataBase64Rep,
+                    sourceInputElementId: "",
+                    sourceUri: "data:" + type + ";base64," + dataBase64Rep,
                     fileName: filename,
                     openInNewWindow: true,
                     advanced: {},
                     success: function(files) { console.log("Uploaded") },
                     progress: function(p) {console.log("Progress")},
                     cancel: function() { console.log("Cancelled")},
-                    error: function(e) { console.log("Error") }
+                    error: function(e) { console.log(e) }
                 }
-                launchSaveToOneDrive(odOptions);
+                launchSaveToOneDrive(odOptions);*/
             });
             c++;
             console.log(c);
+            //gapi.savetodrive.go('container');
+        }
+
+        function insertFile(filename, mimeType, dataBase64Rep, callback) {
+            const boundary = '-------314159265358979323846';
+            const delimiter = "\r\n--" + boundary + "\r\n";
+            const close_delim = "\r\n--" + boundary + "--";
+
+            var contentType = mimeType || 'application/octet-stream';
+            var metadata = {
+                'title': filename,
+                'mimeType': contentType
+            };
+
+            var base64Data = dataBase64Rep;
+            var multipartRequestBody =
+                delimiter +
+                'Content-Type: application/json\r\n\r\n' +
+                JSON.stringify(metadata) +
+                delimiter +
+                'Content-Type: ' + contentType + '\r\n' +
+                'Content-Transfer-Encoding: base64\r\n' +
+                '\r\n' +
+                base64Data +
+                close_delim;
+
+            var request = gapi.client.request({
+                'path': '/upload/drive/v2/files',
+                'method': 'POST',
+                'params': {'uploadType': 'multipart'},
+                'headers': {
+                    'Content-Type': 'multipart/mixed; boundary="' + boundary + '"'
+                },
+                'body': multipartRequestBody});
+            if (!callback) {
+                callback = function(file) {
+                    console.log(file)
+                };
+            }
+            request.execute(callback);
         }
 
         function launchSaveToOneDrive(odOptions){

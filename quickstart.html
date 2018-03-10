@@ -7,14 +7,16 @@
 </head>
 <body>
     <p>Gmail API Quickstart</p>
+    <input placeholder="Search..." id="s" type="text" />
+    <h3 class="text">All attachments</h3>
     <ul class="container"></ul>
-    <h3>Images</h3>
+    <h3 class="text">Images</h3>
     <ul class="image-container"></ul>
-    <h3>Office</h3>
+    <h3 class="text">Office</h3>
     <ul class="office-container"></ul>
-    <h3>PDFs</h3>
+    <h3 class="text">PDFs</h3>
     <ul class="pdf-container"></ul>
-    <h3>Other media</h3>
+    <h3 class="text">Other media</h3>
     <ul class="other-container"></ul>
     <!--<a id="download-attach" download="filename">Attach</a>-->
     <!--Add buttons to initiate auth sequence and sign out-->
@@ -220,6 +222,26 @@
             });
             getPageOfMessages(initialRequest, []);
         }*/
+        $('#s').keyup(function(){
+   var valThis = $(this).val().toLowerCase();
+    $('.container>li').each(function(){
+     var text = $(this).text().toLowerCase();
+        (text.indexOf(valThis) == 0) ? $(this).show() : $(this).hide();
+        $('.image-container').hide();
+        $('.office-container').hide();
+        $('.pdf-container').hide();
+        $('.other-container').hide();
+        $('.text').hide();
+
+        if(valThis == ''){
+          $('.image-container').show();
+          $('.office-container').show();
+          $('.pdf-container').show();
+          $('.other-container').show();
+          $('.text').show();
+        }
+   });
+});
     </script>
 
 <script async defer src="https://apis.google.com/js/api.js"

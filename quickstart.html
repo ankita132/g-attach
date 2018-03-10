@@ -4,10 +4,16 @@
 <head>
     <title>Gmail API Quickstart</title>
     <meta charset='utf-8' />
+    <link href="./style.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-    <p>Gmail API Quickstart</p>
+  <div id="box">
+  <div class="header">
+    <h1 class="heading">G-Attach</h1>
+</div>
+<div class="search">
     <input placeholder="Search..." id="s" type="text" />
+</div>
     <h3 class="text">All attachments</h3>
     <ul class="container"></ul>
     <h3 class="text">Images</h3>
@@ -18,11 +24,11 @@
     <ul class="pdf-container"></ul>
     <h3 class="text">Other media</h3>
     <ul class="other-container"></ul>
+  </div>
     <!--<a id="download-attach" download="filename">Attach</a>-->
     <!--Add buttons to initiate auth sequence and sign out-->
     <button id="authorize-button" style="display: none;">Authorize</button>
     <button id="signout-button" style="display: none;">Sign Out</button>
-
     <pre id="content"></pre>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://js.live.net/v7.2/OneDrive.js"></script>
@@ -75,6 +81,11 @@
             } else {
                 authorizeButton.style.display = 'block';
                 signoutButton.style.display = 'none';
+                  $('.container').html("");
+                  $('.image-container').html("");
+                  $('.office-container').html("");
+                  $('.pdf-container').html("");
+                  $('.other-container').html("");
             }
         }
         function listHandler(list)
@@ -151,18 +162,21 @@
             var dataBase64Rep = attachment.data.replace(/-/g, '+').replace(/_/g, '/');
             var blob = b64toBlob(dataBase64Rep, mimeType, attachment.size);
             var blobUrl = URL.createObjectURL(blob);
-            var link = '<li><a href="' + blobUrl + '"  id="download-attach' + c + '" download="' + filename + '">'+filename+'</a></li><button class="od-' + c + '">Save to OneDrive</button><div class="g-savetodrive" data-src="' + blobUrl + ' "data-filename="' + filename + '" data-sitename="gattach"></div>';
+            var link = '<li><a href="' + blobUrl + '"  id="download-attach' + c + '" download="' + filename + '">'+filename+'</a><button class="save od-' + c + '"><img src="google_drive.ico" width="30" height="30"/></button><div class="g-savetodrive" data-src="' + blobUrl + ' "data-filename="' + filename + '" data-sitename="gattach"></div></li>';
             $('.container').append(link);
             var ext = filename.split('.').pop().toLowerCase();
-            if(imageext.indexOf(ext) > -1)
+            if(imageext.indexOf(ext) > -1){
                 $('.image-container').append(link);
-            else if(officeext.indexOf(ext) > -1)
+              }
+            else if(officeext.indexOf(ext) > -1){
                 $('.office-container').append(link);
-            else if(ext == 'pdf')
+              }
+            else if(ext == 'pdf'){
                 $('.pdf-container').append(link);
-            else
+              }
+            else{
                 $('.other-container').append(link);
-
+              }
             $('.od-' + c).on('click', function () {
                 console.log("clicked");
                 var odOptions = {
@@ -254,6 +268,7 @@
         }
    });
 });
+
     </script>
 
     <script async defer src="https://apis.google.com/js/api.js"

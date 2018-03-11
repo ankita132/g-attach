@@ -2,9 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c520fa98-e34a-41b1-9b36-35bd36c627b3" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/connect.js" afterPath="$PROJECT_DIR$/connect.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/quickstart.html" afterPath="$PROJECT_DIR$/quickstart.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/script.js" afterPath="$PROJECT_DIR$/script.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/style.css" afterPath="$PROJECT_DIR$/style.css" />
     </list>
@@ -43,21 +40,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="script.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="script.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/script.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="651">
-              <caret line="93" column="40" lean-forward="true" selection-start-line="93" selection-start-column="40" selection-end-line="93" selection-end-column="40" />
+            <state relative-caret-position="217">
+              <caret line="117" column="165" lean-forward="false" selection-start-line="117" selection-start-column="165" selection-end-line="117" selection-end-column="165" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="style.css" pinned="false" current-in-tab="false">
+      <file leaf-file-name="style.css" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/style.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1457">
-              <caret line="47" column="2" lean-forward="false" selection-start-line="47" selection-start-column="2" selection-end-line="47" selection-end-column="2" />
+            <state relative-caret-position="3224">
+              <caret line="242" column="17" lean-forward="false" selection-start-line="242" selection-start-column="17" selection-end-line="242" selection-end-column="17" />
               <folding />
             </state>
           </provider>
@@ -92,8 +89,8 @@
         <option value="$PROJECT_DIR$/getAttachments.js" />
         <option value="$PROJECT_DIR$/quickstart.html" />
         <option value="$PROJECT_DIR$/connect.js" />
-        <option value="$PROJECT_DIR$/style.css" />
         <option value="$PROJECT_DIR$/script.js" />
+        <option value="$PROJECT_DIR$/style.css" />
       </list>
     </option>
   </component>
@@ -178,12 +175,12 @@
       <workItem from="1520694318324" duration="136000" />
       <workItem from="1520694471269" duration="119000" />
       <workItem from="1520694604926" duration="1666000" />
-      <workItem from="1520758803355" duration="2451000" />
+      <workItem from="1520758803355" duration="3656000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="43575000" />
+    <option name="totallyTimeSpent" value="44780000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1120" y="24" width="800" height="977" extended-state="4" />
@@ -401,18 +398,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/style.css">
+    <entry file="file://$PROJECT_DIR$/script.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1457">
-          <caret line="47" column="2" lean-forward="false" selection-start-line="47" selection-start-column="2" selection-end-line="47" selection-end-column="2" />
+        <state relative-caret-position="217">
+          <caret line="117" column="165" lean-forward="false" selection-start-line="117" selection-start-column="165" selection-end-line="117" selection-end-column="165" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/script.js">
+    <entry file="file://$PROJECT_DIR$/style.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="651">
-          <caret line="93" column="40" lean-forward="true" selection-start-line="93" selection-start-column="40" selection-end-line="93" selection-end-column="40" />
+        <state relative-caret-position="3224">
+          <caret line="242" column="17" lean-forward="false" selection-start-line="242" selection-start-column="17" selection-end-line="242" selection-end-column="17" />
           <folding />
         </state>
       </provider>

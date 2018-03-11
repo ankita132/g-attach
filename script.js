@@ -81,10 +81,15 @@ function getAttachmentsHandler(message) {
     if((message.labelIds.indexOf("CATEGORY_SOCIAL") > -1) || (message.labelIds.indexOf("CATEGORY_PROMOTIONS") > -1) || (message.labelIds.indexOf("INBOX") == -1))
         return;
     console.log(message);
-    console.log(new Date(message.internalDate));
-    getAttachments('me', message, showAttachments);
+    var datems = parseFloat(message.internalDate);
+    var dateobj = new Date(datems);
+    var hours = dateobj.getHours() < 10 ? "0" + dateobj.getHours() : dateobj.getHours();
+    var mins = dateobj.getMinutes() < 10 ? "0" + dateobj.getMinutes() : dateobj.getMinutes();
+    var date = dateobj.getDate() + "/" + (dateobj.getMonth() + 1) + "/" + dateobj.getFullYear() + "   " + hours + ":" + mins;
+    console.log(date);
+    getAttachments('me', message, date, showAttachments);
 }
-function getAttachments(userId, message, callback) {
+function getAttachments(userId, message, date, callback) {
     if(!message.payload.parts)
         return;
     var parts = message.payload.parts;
@@ -99,18 +104,18 @@ function getAttachments(userId, message, callback) {
             });
             (function(filename,  mimeType) {
                 request.execute(function(attachment) {
-                    callback(filename, mimeType, attachment);
+                    callback(filename, mimeType, attachment, date);
                 });
             })(part.filename, part.mimeType);
         }
     }
 }
-function showAttachments(filename, mimeType, attachment) {
+function showAttachments(filename, mimeType, attachment, date) {
     var dataBase64Rep = attachment.data.replace(/-/g, '+').replace(/_/g, '/');
     var blob = b64toBlob(dataBase64Rep, mimeType, attachment.size);
     var blobUrl = URL.createObjectURL(blob);
 
-    var link = '<li><a href="' + blobUrl + '"  id="download-attach' + c + '" download="' + filename + '">'+filename+'</a><button class="save od-' + c + '"><img src="google_drive.png" width="30" height="30"/></button></div></li>';
+    var link = '<li><a href="' + blobUrl + '"  id="download-attach' + c + '" download="' + filename + '">'+filename+'<span class="date" id="date-' + c + '">' + date + '</span></a><button class="save od-' + c + '"><img src="google_drive.png" width="30" height="30"/></button></div></li>';
     $('.attachment-container').append(link);
     var ext = filename.split('.').pop().toLowerCase();
     var type="";

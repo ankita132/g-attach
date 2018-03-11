@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css?family=Lato');
 
+*{
+    box-sizing: border-box;
+}
+
 body{
   margin: 0;
   padding: 0;
@@ -21,7 +25,7 @@ h1{
   width:100%;
   height:20%;
 }
-input[type=text] {
+#s {
     width: 80%;
     box-sizing: border-box;
     border: 2px solid #ccc;
@@ -34,8 +38,6 @@ input[type=text] {
     padding: 12px 20px 12px 40px;
     color:white;
     position: relative;
-    left:50%;
-    transform: translateX(-50%);
 }
 h3{
   text-align: center;
@@ -44,25 +46,21 @@ h3{
   text-decoration: underline;
   text-transform: uppercase;
 }
-ul{
-  position: relative;
-  left:50%;
-  transform: translateX(-50%);
-  list-style-type: none;
+ul {
+    width: 100%;
+    list-style-type: none;
+    padding: 0;
 }
 li {
-  padding-top: 0.75rem;
-  padding-right: 0.75rem;
-  padding-bottom: 0.75rem;
-  padding-left: 0.75rem;
-  width: 50%;
-  background: #fff;
-  cursor: default;
-  border-top: 1px solid #eee;
-  border-radius:5px;
-  position: relative;
-  left:50%;
-  transform: translateX(-50%);
+    text-align: left;
+    border-left:10px solid #8bc4ea;
+    background: #fff;
+    cursor: default;
+    border-top: 1px solid #eee;
+    border-radius: 5px;
+    width: 100%;
+    display: flex;
+    align-items: stretch;
 }
 li:last-of-type {
   border-bottom: 1px solid #eee;
@@ -99,6 +97,14 @@ a{
   color:black;
   text-decoration: none;
   font-family: 'Lato', sans-serif;
+}
+li>a{
+    width: 90%;
+    width: calc(100% - 42px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    padding: 0.75em;
 }
 .save{
     background-color: transparent;
@@ -192,4 +198,15 @@ a{
   -moz-transition: all 0.5s ease-in-out;
   -0-transition: all 0.5s ease-in-out;
   transition: all 0.5s ease-in-out;
+}
+
+.wrapper{
+    width: 70%;
+    margin: auto;
+    text-align: center;
+}
+@media only screen and (max-width: 600px) {
+    .wrapper{
+        width: 90%;
+    }
 }

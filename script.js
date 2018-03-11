@@ -236,7 +236,6 @@ function insertFile(filename, mimeType, dataBase64Rep, callback) {
     $(".dialog p, .dialog h2").css("opacity", "1");
     $("#close").css("opacity", "1");
     $("#okButton").css("opacity", "1");
-    $(".dialog").css("height", "185px");
     $(".dialog").css("width", "300px");
     $(".dialog").css("padding", "15px");
     $(".dialog").css("margin-left", "-174.5px");

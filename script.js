@@ -38,11 +38,11 @@ $(document).ready(function() {
         }, 400);
     });
 });
-var c = 0;
+var c = 0, newc = 0;
 var imageext = ['jpg', 'jpeg', 'png', 'gif', 'tiff', 'bmp', 'svg', 'raw'];
 var officeext = ['doc', 'dot', 'wbk', 'docm', 'dotx', 'dotm', 'docb', 'docx', 'xls', 'xlt', 'xlm', 'xlsx', 'xlsm', 'xltx', 'xltm', 'xlsb', 'xla', 'xlam', 'xll', 'xlw', 'ppt', 'pot', 'pps', 'pptx', 'pptm', 'potx', 'potm', 'ppam', 'ppsx', 'ppsm', 'sldx', 'sldm', 'odt', 'ott', 'xml', 'wpd', 'rtf', 'txt', 'csv', 'ods', 'ots', 'odp', 'odg', 'otp'];
 function signedInSuccess(){
-    listMessage('me', 1000, listHandler);
+    listMessage('me', 50,  listHandler);
 }
 function signedOutSuccess(){
     $('.attachment-container').html("");
@@ -50,6 +50,9 @@ function signedOutSuccess(){
     $('.office-container').html("");
     $('.pdf-container').html("");
     $('.other-container').html("");
+    c = 0;
+    newc = 0;
+    attachmentlist = new Array();
 }
 function listMessage(userId, maxResults, callback)
 {
@@ -63,11 +66,11 @@ function listMessage(userId, maxResults, callback)
 }
 function listHandler(list)
 {
+    list = list.messages;
     console.log(list);
-    var messages = list.messages;
-    for(var i = 0; i < messages.length; i++)
+    for(var i = 0; i < list.length; i++)
     {
-        getMessage('me', messages[i].id, getAttachmentsHandler);
+        getMessage('me', list[i].id, getAttachmentsHandler);
     }
 }
 function getMessage(userId, messageId, callback) {
@@ -77,22 +80,25 @@ function getMessage(userId, messageId, callback) {
     });
     request.execute(callback);
 }
-function getAttachmentsHandler(message) {
-    if((message.labelIds.indexOf("CATEGORY_SOCIAL") > -1) || (message.labelIds.indexOf("CATEGORY_PROMOTIONS") > -1) || (message.labelIds.indexOf("INBOX") == -1))
-        return;
-    console.log(message);
-    var datems = parseFloat(message.internalDate);
+function getDatefromMs(datems){
     var dateobj = new Date(datems);
     var hours = dateobj.getHours() < 10 ? "0" + dateobj.getHours() : dateobj.getHours();
     var mins = dateobj.getMinutes() < 10 ? "0" + dateobj.getMinutes() : dateobj.getMinutes();
     var date = dateobj.getDate() + "/" + (dateobj.getMonth() + 1) + "/" + dateobj.getFullYear() + "   " + hours + ":" + mins;
-    console.log(date);
-    getAttachments('me', message, date, showAttachments);
+    return date;
 }
-function getAttachments(userId, message, date, callback) {
+function getAttachmentsHandler(message) {
+    if((message.labelIds.indexOf("CATEGORY_SOCIAL") > -1) || (message.labelIds.indexOf("CATEGORY_PROMOTIONS") > -1) || (message.labelIds.indexOf("INBOX") == -1))
+        return;
+    console.log(message);
+    getAttachment('me', message, fillAttachment);
+}
+function getAttachment(userId, message, callback) {
     if(!message.payload.parts)
         return;
     var parts = message.payload.parts;
+    var internalDate = message.internalDate;
+    var datems = parseFloat(internalDate);
     for (var i = 0; i < parts.length; i++) {
         var part = parts[i];
         if (part.filename && part.filename.length > 0) {
@@ -104,42 +110,75 @@ function getAttachments(userId, message, date, callback) {
             });
             (function(filename,  mimeType) {
                 request.execute(function(attachment) {
-                    callback(filename, mimeType, attachment, date);
+                    callback(filename, mimeType, attachment, datems);
                 });
             })(part.filename, part.mimeType);
         }
     }
 }
-function showAttachments(filename, mimeType, attachment, date) {
+var attachmentlist = new Array();
+
+function fillAttachment(filename, mimeType, attachment, datems) {
     var dataBase64Rep = attachment.data.replace(/-/g, '+').replace(/_/g, '/');
     var blob = b64toBlob(dataBase64Rep, mimeType, attachment.size);
     var blobUrl = URL.createObjectURL(blob);
-
+    date = getDatefromMs(datems);
     var link = '<li><a href="' + blobUrl + '"  id="download-attach' + c + '" download="' + filename + '">'+filename+'<span class="date" id="date-' + c + '">' + date + '</span></a><button class="save od-' + c + '"><img src="google_drive.png" width="30" height="30"/></button></div></li>';
-    $('.attachment-container').append(link);
+    var attachment = {
+        'datems': datems,
+        'link': link
+    };
     var ext = filename.split('.').pop().toLowerCase();
-    var type="";
-    if(imageext.indexOf(ext) > -1) {
-        $('.image-container').append(link);
-        type = 'image/' + ext;
-    }
-    else if(officeext.indexOf(ext) > -1) {
-        $('.office-container').append(link);
-        type = mimeType;
-    }
-    else if(ext == 'pdf') {
-        $('.pdf-container').append(link);
-        type = "application/pdf"
-    }
-    else {
-        $('.other-container').append(link);
-    }
-    console.log(type);
-    $('.od-' + c).on('click', function () {
-        insertFile(filename, mimeType, dataBase64Rep, '')
-    });
+    if(imageext.indexOf(ext) > -1)
+        attachment.type = 'image';
+    else if(officeext.indexOf(ext) > -1)
+        attachment.type = 'office';
+    else if(ext == 'pdf')
+        attachment.type = 'pdf';
+    else
+        attachment.type = 'other';
+    attachmentlist.push(attachment);
     c++;
-    console.log(c);
+}
+
+setInterval(function(){
+    if(newc != c){
+        console.log(attachmentlist);
+        newc = c;
+        showAttachments();
+    }
+}, 1000);
+function showAttachments() {
+    $(".attachment-container").empty();
+    $(".image-container").empty();
+    $(".office-container").empty();
+    $(".pdf-container").empty();
+    $(".other-container").empty();
+    newlist = new Array();
+    keys = new Array();
+    attachmentlist.sort(function (a, b) {
+        var keya = a.datems, keyb = b.datems;
+        if(keya < keyb) return 1;
+        else if(keya > keyb) return -1;
+        else return 0;
+    });
+    console.log(attachmentlist);
+    for (var i = 0; i < attachmentlist.length; i++) {
+        var link = attachmentlist[i].link;
+        var type = attachmentlist[i].type;
+        $(".attachment-container").append(link);
+        if (type=='image')
+            $('.image-container').append(link);
+        else if (type=='office')
+            $('.office-container').append(link);
+        else if (type == 'pdf')
+            $('.pdf-container').append(link);
+        else
+            $('.other-container').append(link);
+        $('.od-' + c).on('click', function () {
+            insertFile(filename, mimeType, dataBase64Rep, '')
+        });
+    }
 }
 function insertFile(filename, mimeType, dataBase64Rep, callback) {
     const boundary = '-------314159265358979323846';

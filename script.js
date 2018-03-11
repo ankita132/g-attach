@@ -126,7 +126,11 @@ function fillAttachment(filename, mimeType, attachment, datems) {
     var link = '<li><a href="' + blobUrl + '"  id="download-attach' + c + '" download="' + filename + '">'+filename+'<span class="date" id="date-' + c + '">' + date + '</span></a><button class="save od-' + c + '"><img src="google_drive.png" width="30" height="30"/></button></div></li>';
     var attachment = {
         'datems': datems,
-        'link': link
+        'link': link,
+        'c':c,
+        'filename': filename,
+        'mimeType': mimeType,
+        'dataBase64Rep': dataBase64Rep
     };
     var ext = filename.split('.').pop().toLowerCase();
     if(imageext.indexOf(ext) > -1)
@@ -166,6 +170,11 @@ function showAttachments() {
     for (var i = 0; i < attachmentlist.length; i++) {
         var link = attachmentlist[i].link;
         var type = attachmentlist[i].type;
+        var id = attachmentlist[i].c;
+        var filename = attachmentlist[i].filename;
+        var mimeType = attachmentlist[i].mimeType;
+        var dataBase64Rep = attachmentlist[i].dataBase64Rep;
+
         $(".attachment-container").append(link);
         if (type=='image')
             $('.image-container').append(link);
@@ -175,7 +184,7 @@ function showAttachments() {
             $('.pdf-container').append(link);
         else
             $('.other-container').append(link);
-        $('.od-' + c).on('click', function () {
+        $('.od-' + id).on('click', function () {
             insertFile(filename, mimeType, dataBase64Rep, '')
         });
     }
@@ -229,6 +238,6 @@ function insertFile(filename, mimeType, dataBase64Rep, callback) {
     $(".dialog").css("padding", "15px");
     $(".dialog").css("margin-left", "-174.5px");
     setTimeout(function() {
-      $(".dialog").css("opacity", "1");
+        $(".dialog").css("opacity", "1");
     }, 400);
 }

@@ -1,6 +1,6 @@
 // Client ID and API key from the Developer Console
-var CLIENT_ID = '692519634641-7g8lbollqn2vqs43d8dqd8or4qnlb2n0.apps.googleusercontent.com';
-var API_KEY = 'AIzaSyAdTyRvOv_jIL1Zc2Ya2B0rqrVzOleOupo';
+var CLIENT_ID = '692519634641-aovv5cmj6ai31getn39gvgao04deji64.apps.googleusercontent.com';
+var API_KEY = 'AIzaSyB9vAv8fSBXGIzDq0kfNyh3_VoY_vd6DkA';
 // Array of API discovery doc URLs for APIs used by the quickstart
 var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest"];
 // Authorization scopes required by the API; multiple scopes can be

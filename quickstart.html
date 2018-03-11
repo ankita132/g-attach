@@ -5,87 +5,54 @@
     <title>Gmail API Quickstart</title>
     <meta charset='utf-8' />
     <link href="./style.css" rel="stylesheet" type="text/css" />
-</head>
-<body>
-  <div id="box">
-  <div class="header">
-    <h1 class="heading">G-Attach</h1>
-</div>
-<div class="search">
-    <input placeholder="Search..." id="s" type="text" />
-</div>
-    <h3 class="text">All attachments</h3>
-    <ul class="container"></ul>
-    <h3 class="text">Images</h3>
-    <ul class="image-container"></ul>
-    <h3 class="text">Office</h3>
-    <ul class="office-container"></ul>
-    <h3 class="text">PDFs</h3>
-    <ul class="pdf-container"></ul>
-    <h3 class="text">Other media</h3>
-    <ul class="other-container"></ul>
-  </div>
-    <!--<a id="download-attach" download="filename">Attach</a>-->
-    <!--Add buttons to initiate auth sequence and sign out-->
-    <button id="authorize-button" style="display: none;">Authorize</button>
-    <button id="signout-button" style="display: none;">Sign Out</button>
-    <pre id="content"></pre>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script type="text/javascript" src="https://js.live.net/v7.2/OneDrive.js"></script>
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <script type="text/javascript">
-        // Client ID and API key from the Developer Console
-        var CLIENT_ID = '692519634641-7g8lbollqn2vqs43d8dqd8or4qnlb2n0.apps.googleusercontent.com';
-        var API_KEY = 'AIzaSyAdTyRvOv_jIL1Zc2Ya2B0rqrVzOleOupo';
-        // Array of API discovery doc URLs for APIs used by the quickstart
-        var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest"];
-        // Authorization scopes required by the API; multiple scopes can be
-        // included, separated by spaces.
-        var SCOPES = 'https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/drive';        var authorizeButton = document.getElementById('authorize-button');
-        var signoutButton = document.getElementById('signout-button');
-        /**
-         *  On load, called to load the auth2 library and API client library.
-         */
-        function handleClientLoad() {
-            gapi.load('client:auth2', initClient);
-        }
-        /**
-         *  Initializes the API client library and sets up sign-in state
-         *  listeners.
-         */
-        function initClient() {
-            gapi.client.init({
-                apiKey: API_KEY,
-                clientId: CLIENT_ID,
-                discoveryDocs: DISCOVERY_DOCS,
-                scope: SCOPES
-            }).then(function () {
-                // Listen for sign-in state changes.
-                gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-                // Handle the initial sign-in state.
-                updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-                authorizeButton.onclick = handleAuthClick;
-                signoutButton.onclick = handleSignoutClick;
+    <script src="https://apis.google.com/js/platform.js" defer></script>
+    <script type="text/javascript" defer>
+        $(document).ready(function() {
+            handleClientLoad();
+            $('#s').keyup(function(){
+                var valThis = $(this).val().toLowerCase();
+                $('.container>li').each(function(){
+                    var text = $(this).text().toLowerCase();
+                    (text.indexOf(valThis) > -1) ? $(this).show() : $(this).hide();
+                    $('.image-container').hide();
+                    $('.office-container').hide();
+                    $('.pdf-container').hide();
+                    $('.other-container').hide();
+                    $('.text').hide();
+
+                    if(valThis == ''){
+                        $('.image-container').show();
+                        $('.office-container').show();
+                        $('.pdf-container').show();
+                        $('.other-container').show();
+                        $('.text').show();
+                    }
+                });
             });
+        });
+        var c = 0;
+        var imageext = ['jpg', 'jpeg', 'png', 'gif', 'tiff', 'bmp', 'svg', 'raw'];
+        var officeext = ['doc', 'dot', 'wbk', 'docm', 'dotx', 'dotm', 'docb', 'docx', 'xls', 'xlt', 'xlm', 'xlsx', 'xlsm', 'xltx', 'xltm', 'xlsb', 'xla', 'xlam', 'xll', 'xlw', 'ppt', 'pot', 'pps', 'pptx', 'pptm', 'potx', 'potm', 'ppam', 'ppsx', 'ppsm', 'sldx', 'sldm', 'odt', 'ott', 'xml', 'wpd', 'rtf', 'txt', 'csv', 'ods', 'ots', 'odp', 'odg', 'otp'];
+        function signedInSuccess(){
+            listMessage('me', 50, listHandler);
         }
-        /**
-         *  Called when the signed in status changes, to update the UI
-         *  appropriately. After a sign-in, the API is called.
-         */
-        function updateSigninStatus(isSignedIn) {
-            if (isSignedIn) {
-                authorizeButton.style.display = 'none';
-                signoutButton.style.display = 'block';
-                listMessage('me', 50, listHandler)
-            } else {
-                authorizeButton.style.display = 'block';
-                signoutButton.style.display = 'none';
-                  $('.container').html("");
-                  $('.image-container').html("");
-                  $('.office-container').html("");
-                  $('.pdf-container').html("");
-                  $('.other-container').html("");
-            }
+        function signedOutSuccess(){
+            $('.container').html("");
+            $('.image-container').html("");
+            $('.office-container').html("");
+            $('.pdf-container').html("");
+            $('.other-container').html("");
+        }
+        function listMessage(userId, maxResults, callback)
+        {
+            var request = gapi.client.gmail.users.messages.list({
+                'userId': userId,
+                'maxResults': maxResults
+            });
+            request.execute(function(resp){
+                callback(resp);
+            })
         }
         function listHandler(list)
         {
@@ -95,6 +62,19 @@
             {
                 getMessage('me', messages[i].id, getAttachmentsHandler);
             }
+        }
+        function getMessage(userId, messageId, callback) {
+            var request = gapi.client.gmail.users.messages.get({
+                'userId': userId,
+                'id': messageId
+            });
+            request.execute(callback);
+        }
+        function getAttachmentsHandler(message) {
+            if((message.labelIds.indexOf("CATEGORY_SOCIAL") > -1) || (message.labelIds.indexOf("CATEGORY_PROMOTIONS") > -1) || (message.labelIds.indexOf("INBOX") == -1))
+                return;
+            console.log(message);
+            getAttachments('me', message, showAttachments);
         }
         function getAttachments(userId, message, callback) {
             if(!message.payload.parts)
@@ -122,46 +102,10 @@
                 }
             }
         }
-        function b64toBlob(b64Data, contentType, sliceSize) {
-            contentType = contentType || '';
-            sliceSize = sliceSize || 512;
-
-            var byteCharacters = atob(b64Data);
-            var byteArrays = [];
-
-            for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-                var slice = byteCharacters.slice(offset, offset + sliceSize);
-
-                var byteNumbers = new Array(slice.length);
-                for (var i = 0; i < slice.length; i++) {
-                    byteNumbers[i] = slice.charCodeAt(i);
-                }
-
-                var byteArray = new Uint8Array(byteNumbers);
-
-                byteArrays.push(byteArray);
-            }
-
-            return new Blob(byteArrays, {type: contentType});
-        }
-
-        var c = 0;
-        var imageext = ['jpg', 'jpeg', 'png', 'gif', 'tiff', 'bmp', 'svg', 'raw'];
-        var officeext = ['doc', 'dot', 'wbk', 'docm', 'dotx', 'dotm', 'docb', 'docx', 'xls', 'xlt', 'xlm', 'xlsx', 'xlsm', 'xltx', 'xltm', 'xlsb', 'xla', 'xlam', 'xll', 'xlw', 'ppt', 'pot', 'pps', 'pptx', 'pptm', 'potx', 'potm', 'ppam', 'ppsx', 'ppsm', 'sldx', 'sldm', 'odt', 'ott', 'xml', 'wpd', 'rtf', 'txt', 'csv', 'ods', 'ots', 'odp', 'odg', 'otp'];
-
-        function getAttachmentsHandler(message) {
-            if((message.labelIds.indexOf("CATEGORY_SOCIAL") > -1) || (message.labelIds.indexOf("CATEGORY_PROMOTIONS") > -1) || (message.labelIds.indexOf("INBOX") == -1))
-                return;
-            console.log(message);
-            //getAttachments('me', message, viewAttachment);
-            getAttachments('me', message, showAttachments);
-        }
-
         function showAttachments(filename, mimeType, attachment) {
             var dataBase64Rep = attachment.data.replace(/-/g, '+').replace(/_/g, '/');
             var blob = b64toBlob(dataBase64Rep, mimeType, attachment.size);
             var blobUrl = URL.createObjectURL(blob);
-            //var link = '<li><a href="' + blobUrl + '"  id="download-attach' + c + '" download="' + filename + '">'+filename+'</a><button class="save od-' + c + '"><img src="google_drive.ico" width="30" height="30"/></button><div class="g-savetodrive" data-src="' + blobUrl + ' "data-filename="' + filename + '" data-sitename="gattach"></div></li>';
 
             var link = '<li><a href="' + blobUrl + '"  id="download-attach' + c + '" download="' + filename + '">'+filename+'</a><button class="save od-' + c + '"><img src="google_drive.ico" width="30" height="30"/></button></div></li>';
             $('.container').append(link);
@@ -185,27 +129,10 @@
             console.log(type);
             $('.od-' + c).on('click', function () {
                 insertFile(filename, mimeType, dataBase64Rep, '')
-                /*console.log("clicked");
-                var odOptions = {
-                    clientId: "9b939ddf-4334-4ade-a654-865807e80ca6",
-                    action: "save",
-                    sourceInputElementId: "",
-                    sourceUri: "data:" + type + ";base64," + dataBase64Rep,
-                    fileName: filename,
-                    openInNewWindow: true,
-                    advanced: {},
-                    success: function(files) { console.log("Uploaded") },
-                    progress: function(p) {console.log("Progress")},
-                    cancel: function() { console.log("Cancelled")},
-                    error: function(e) { console.log(e) }
-                }
-                launchSaveToOneDrive(odOptions);*/
             });
             c++;
             console.log(c);
-            //gapi.savetodrive.go('container');
         }
-
         function insertFile(filename, mimeType, dataBase64Rep, callback) {
             const boundary = '-------314159265358979323846';
             const delimiter = "\r\n--" + boundary + "\r\n";
@@ -244,83 +171,39 @@
             }
             request.execute(callback);
         }
-
-        function launchSaveToOneDrive(odOptions){
-            OneDrive.save(odOptions);
-        }
-
-        function getMessage(userId, messageId, callback) {
-            var request = gapi.client.gmail.users.messages.get({
-                'userId': userId,
-                'id': messageId
-            });
-            request.execute(callback);
-        }
-        function handleAuthClick(event) {
-            gapi.auth2.getAuthInstance().signIn();
-        }
-        function handleSignoutClick(event) {
-            gapi.auth2.getAuthInstance().signOut();
-        }
-        function listMessage(userId, maxResults, callback)
-        {
-            var request = gapi.client.gmail.users.messages.list({
-                'userId': userId,
-                'maxResults': maxResults
-            });
-            request.execute(function(resp){
-                callback(resp);
-            })
-        }
-        /*function listMessages(userId, query, callback) {
-            var getPageOfMessages = function(request, result) {
-                request.execute(function(resp) {
-                    result = result.concat(resp.messages);
-                    var nextPageToken = resp.nextPageToken;
-                    if (nextPageToken) {
-                        request = gapi.client.gmail.users.messages.list({
-                            'userId': userId,
-                            'pageToken': nextPageToken,
-                            'q': query
-                        });
-                        getPageOfMessages(request, result);
-                    } else {
-                        callback(result);
-                    }
-                });
-            };
-            var initialRequest = gapi.client.gmail.users.messages.list({
-                'userId': userId,
-                'q': query
-            });
-            getPageOfMessages(initialRequest, []);
-        }*/
-        $('#s').keyup(function(){
-   var valThis = $(this).val().toLowerCase();
-    $('.container>li').each(function(){
-     var text = $(this).text().toLowerCase();
-        (text.indexOf(valThis) > -1) ? $(this).show() : $(this).hide();
-        $('.image-container').hide();
-        $('.office-container').hide();
-        $('.pdf-container').hide();
-        $('.other-container').hide();
-        $('.text').hide();
-
-        if(valThis == ''){
-          $('.image-container').show();
-          $('.office-container').show();
-          $('.pdf-container').show();
-          $('.other-container').show();
-          $('.text').show();
-        }
-   });
-});
-
     </script>
+    <script type="text/javascript" src="connect.js" defer></script>
+<body>
+  <div id="box">
+  <div class="header">
+    <h1 class="heading">G-Attach</h1>
+</div>
+<div class="search">
+    <input placeholder="Search..." id="s" type="text" />
+</div>
+    <h3 class="text">All attachments</h3>
+    <ul class="container"></ul>
+    <h3 class="text">Images</h3>
+    <ul class="image-container"></ul>
+    <h3 class="text">Office</h3>
+    <ul class="office-container"></ul>
+    <h3 class="text">PDFs</h3>
+    <ul class="pdf-container"></ul>
+    <h3 class="text">Other media</h3>
+    <ul class="other-container"></ul>
+  </div>
+    <!--<a id="download-attach" download="filename">Attach</a>-->
+    <!--Add buttons to initiate auth sequence and sign out-->
+    <button id="authorize-button" style="display: none;">Authorize</button>
+    <button id="signout-button" style="display: none;">Sign Out</button>
+    <pre id="content"></pre>
 
-    <script async defer src="https://apis.google.com/js/api.js"
+
+
+    <!--<script async defer src="https://apis.google.com/js/api.js"
         onload="this.onload=function(){};handleClientLoad()"
         onreadystatechange="if (this.readyState === 'complete') this.onload()">
-    </script>
+
+    </script>-->
     </body>
 </html>

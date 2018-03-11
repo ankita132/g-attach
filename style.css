@@ -52,10 +52,7 @@ ul{
 }
 li {
   border-left:10px solid #8bc4ea;
-  padding-top: 0.75rem;
-  padding-right: 0.75rem;
-  padding-bottom: 0.75rem;
-  padding-left: 0.75rem;
+  padding: 0.75rem;
   width: 50%;
   background: #fff;
   cursor: default;

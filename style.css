@@ -242,3 +242,20 @@ li>a{
     color: darkgray;
     float: right;
 }
+.attachment-container,.image-container,.office-container,.pdf-container,.other-container{
+  overflow-y: scroll;
+  height:30vh;
+  overflow-x:hidden;
+}
+body::-webkit-scrollbar {
+    width: 1em;
+}
+
+body::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}

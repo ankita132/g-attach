@@ -51,7 +51,6 @@ ul{
   list-style-type: none;
 }
 li {
-  border-left:10px solid #8bc4ea;
   padding-top: 0.75rem;
   padding-right: 0.75rem;
   padding-bottom: 0.75rem;
@@ -68,13 +67,41 @@ li {
 li:last-of-type {
   border-bottom: 1px solid #eee;
 }
+li:nth-child(4n+1) {
+  border-left:10px solid #8bc4ea;
+	}
+  li:nth-child(4n+1):hover {
+    background:#8bc4ea;
+    transition: all .5s ease-in-out 0s;
+  	}
+	li:nth-child(4n+2) {
+	border-left:10px solid #ff0574;
+	}
+  li:nth-child(4n+2):hover {
+    background:#ff0574;
+    transition: all .5s ease-in-out 0s;
+  	}
+	li:nth-child(4n+3) {
+	border-left:10px solid #8e46e2;
+	}
+  li:nth-child(4n+3):hover {
+    background:#8e46e2;
+    transition: all .5s ease-in-out 0s;
+  	}
+	li:nth-child(4n+4) {
+	border-left:10px solid #FFF333;
+	}
+  li:nth-child(4n+4):hover {
+    background:#FFF333;
+    transition: all .5s ease-in-out 0s;
+    }
 a{
   color:black;
   text-decoration: none;
   font-family: 'Lato', sans-serif;
 }
 .save{
-    background-color: transparent; 
+    background-color: transparent;
     border: none;
     text-align: center;
     text-decoration: none;
@@ -88,4 +115,81 @@ a{
   position: absolute;
   top:5vh;
   right:5vh;
+}
+.dialog {
+  margin: 0;
+  background: #fff;
+  display: none;
+  font-family: 'Lato', sans-serif;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 125px !important;
+  margin-left: -150px;
+  margin-top: -92.5px;
+  border-radius: 2px;
+  box-shadow: 0 27px 55px 0 rgba(0, 0, 0, 0.3);
+  box-shadow: 0 17px 17px 0 rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  padding: 15px;
+  -webkit-transition: all 0.5s ease-in-out;
+  -moz-transition: all 0.5s ease-in-out;
+  -0-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+  opacity: 0;
+  z-index: 500;
+}
+
+.dialog h2 {
+  margin-top: 0px;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+#close {
+  float: right;
+  font-size: 20px;
+  margin-top: -2.5px;
+  cursor: pointer;
+  -webkit-transition: all 0.5s ease-in-out;
+  -moz-transition: all 0.5s ease-in-out;
+  -0-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+}
+
+#okButton {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin-left: -75px;
+  position: relative;
+  width: 150px;
+  height: 37px;
+  border: none;
+  outline: none;
+  letter-spacing: 3px;
+  cursor: pointer;
+  overflow: hidden;
+  user-select: none;
+  border-radius: 3px;
+  box-shadow: 0 4px 10px 0 rgba(0,0,0,.4);
+  background:#212121;
+  color: #fff;
+}
+
+.dialogBlack {
+  margin: 0;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  background: #000;
+  opacity: 0;
+  z-index: -5;
+  -webkit-transition: all 0.5s ease-in-out;
+  -moz-transition: all 0.5s ease-in-out;
+  -0-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
 }

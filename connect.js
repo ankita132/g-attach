@@ -45,11 +45,11 @@ function initClient() {
 function updateSigninStatus(isSignedIn) {
     if (isSignedIn) {
         authorizeButton.style.display = 'none';
-        signoutButton.style.display = 'block';
+        signoutButton.style.display = 'inline-block';
         signedInSuccess();
        // listMessage('me', 50, listHandler)
     } else {
-        authorizeButton.style.display = 'block';
+        authorizeButton.style.display = 'inline-block';
         signoutButton.style.display = 'none';
         signedOutSuccess();
         /*$('.container').html("");

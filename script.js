@@ -81,6 +81,7 @@ function getAttachmentsHandler(message) {
     if((message.labelIds.indexOf("CATEGORY_SOCIAL") > -1) || (message.labelIds.indexOf("CATEGORY_PROMOTIONS") > -1) || (message.labelIds.indexOf("INBOX") == -1))
         return;
     console.log(message);
+    console.log(new Date(message.internalDate));
     getAttachments('me', message, showAttachments);
 }
 function getAttachments(userId, message, callback) {
@@ -91,18 +92,13 @@ function getAttachments(userId, message, callback) {
         var part = parts[i];
         if (part.filename && part.filename.length > 0) {
             var attachId = part.body.attachmentId;
-            console.log(attachId);
             var request = gapi.client.gmail.users.messages.attachments.get({
                 'id': attachId,
                 'messageId': message.id,
                 'userId': userId
             });
-            console.log(part.filename);
             (function(filename,  mimeType) {
                 request.execute(function(attachment) {
-                    console.log(filename);
-                    console.log(mimeType);
-                    console.log(attachment);
                     callback(filename, mimeType, attachment);
                 });
             })(part.filename, part.mimeType);

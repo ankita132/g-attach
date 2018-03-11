@@ -184,9 +184,12 @@ function showAttachments() {
             $('.pdf-container').append(link);
         else
             $('.other-container').append(link);
-        $('.od-' + id).on('click', function () {
-            insertFile(filename, mimeType, dataBase64Rep, '')
-        });
+
+        (function(filename, mimeType, dataBase64Rep){
+            $('.od-' + id).on('click', function () {
+                insertFile(filename, mimeType, dataBase64Rep, '')
+            });
+        })(filename, mimeType, dataBase64Rep);
     }
 }
 function insertFile(filename, mimeType, dataBase64Rep, callback) {
